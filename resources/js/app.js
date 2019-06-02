@@ -10,6 +10,7 @@ window.Vue = require("vue");
 
 import { Form, HasError, AlertError } from "vform";
 import VueRouter from "vue-router";
+import moment from "moment";
 
 Vue.use(VueRouter);
 
@@ -32,6 +33,14 @@ let routes = [
 const router = new VueRouter({
     mode: "history",
     routes // short for `routes: routes`
+});
+
+// Global filter
+Vue.filter("upperText", text => {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+});
+Vue.filter("humanDate", date => {
+    return moment(date).format("D MMMM YYYY");
 });
 
 /**
