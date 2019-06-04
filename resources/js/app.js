@@ -11,13 +11,33 @@ window.Vue = require("vue");
 import { Form, HasError, AlertError } from "vform";
 import VueRouter from "vue-router";
 import moment from "moment";
+import VueProgressBar from "vue-progressbar";
+import swal from "sweetalert2";
 
-Vue.use(VueRouter);
+// Sweetalert
+window.swal = swal;
+const toast = swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000
+});
+window.toast = toast;
 
+// Progress bar
+Vue.use(VueProgressBar, {
+    color: "rgb(143, 255, 199)",
+    failedColor: "red",
+    height: "3px"
+});
+
+// Form validation
 window.Form = Form;
 Vue.component(HasError.name, HasError);
 Vue.component(AlertError.name, AlertError);
 
+// Vue router
+Vue.use(VueRouter);
 let routes = [
     {
         path: "/dashboard",
@@ -29,7 +49,6 @@ let routes = [
     },
     { path: "/users", component: require("./components/Users.vue").default }
 ];
-
 const router = new VueRouter({
     mode: "history",
     routes // short for `routes: routes`
