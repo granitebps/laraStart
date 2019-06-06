@@ -18,6 +18,9 @@ import swal from "sweetalert2";
 import Gate from "./Gate";
 Vue.prototype.$gate = new Gate(window.user);
 
+// Custom event
+window.Fire = new Vue();
+
 // Sweetalert
 window.swal = swal;
 const toast = swal.mixin({
@@ -58,6 +61,10 @@ let routes = [
     {
         path: "/developer",
         component: require("./components/Developer.vue").default
+    },
+    {
+        path: "*",
+        component: require("./components/NotFound.vue").default
     }
 ];
 const router = new VueRouter({
@@ -101,5 +108,13 @@ Vue.component("not-found", require("./components/NotFound.vue").default);
 
 const app = new Vue({
     el: "#app",
-    router
+    router,
+    data: {
+        search: ""
+    },
+    methods: {
+        searchit: _.debounce(() => {
+            Fire.$emit("searching");
+        }, 1000)
+    }
 });

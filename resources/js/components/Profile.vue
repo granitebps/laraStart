@@ -8,8 +8,8 @@
             class="widget-user-header text-white"
             style="background: url('./img/user-cover.jpg') center center;"
           >
-            <h3 class="widget-user-username">Elizabeth Pierce</h3>
-            <h5 class="widget-user-desc">Web Designer</h5>
+            <h3 class="widget-user-username">{{this.form.name}}</h3>
+            <h5 class="widget-user-desc">{{this.form.role}}</h5>
           </div>
           <div class="widget-user-image">
             <img class="img-circle" :src="getProfilePhoto()" alt="User Avatar">
