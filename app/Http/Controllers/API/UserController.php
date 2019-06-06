@@ -60,6 +60,44 @@ class UserController extends Controller
 		//
 	}
 
+	public function profile()
+	{
+		return auth('api')->user();
+	}
+
+	public function updateProfile(Request $request)
+	{
+		$user =  auth('api')->user();
+
+		$this->validate($request, [
+			'name' => 'required|string|max:191',
+			'email' => 'required|email|string|max:191|unique:users,email,' . $user->id,
+			'password' => 'sometimes|required|min:8',
+			'role' => 'required'
+		]);
+
+		$currentPhoto = $user->photo;
+		if ($request->photo != $currentPhoto) {
+			$ext = explode(';', explode('/', $request->photo)[1])[0];
+			$name = time() . '.' . $ext;
+			\Image::make($request->photo)->save(public_path('img/profile/') . $name);
+
+			$request->merge(['photo' => $name]);
+
+			$userPhoto = public_path('img/profile/') . $currentPhoto;
+			if (file_exists($userPhoto)) {
+				@unlink($userPhoto);
+			}
+		}
+
+		if (!empty($request->password)) {
+			$request->merge(['password' => Hash::make($request->password)]);
+		}
+
+		$user->update($request->all());
+		return ['message' => 'Profile Updated'];
+	}
+
 	/**
 	 * Update the specified resource in storage.
 	 *
@@ -74,7 +112,7 @@ class UserController extends Controller
 		$this->validate($request, [
 			'name' => 'required|string|max:191',
 			'email' => 'required|email|string|max:191|unique:users,email,' . $id,
-			'password' => 'sometimes|string|min:8',
+			'password' => 'sometimes|min:8',
 			'role' => 'required'
 		]);
 
