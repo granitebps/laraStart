@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row mt-4">
+    <div class="row mt-4" v-if="$gate.isAdminOrAuthor()">
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
@@ -50,6 +50,10 @@
         </div>
         <!-- /.card -->
       </div>
+    </div>
+
+    <div v-if="!$gate.isAdminOrAuthor()">
+      <not-found></not-found>
     </div>
 
     <!-- Modal -->
@@ -182,9 +186,16 @@ export default {
 
     // function to retrieve user
     loadUser() {
-      axios.get("api/user").then(({ data }) => {
-        this.users = data.data;
-      });
+      if (this.$gate.isAdminOrAuthor()) {
+        axios
+          .get("api/user")
+          .then(({ data }) => {
+            this.users = data.data;
+          })
+          .catch(() => {
+            swal.fire("Failed!", "There was something wrong", "warning");
+          });
+      }
     },
 
     // function to create user
@@ -247,7 +258,7 @@ export default {
               })
               .catch(err => {
                 console.log(err);
-                swal("Failed!", "There was something wrong", "warning");
+                swal.fire("Failed!", "There was something wrong", "warning");
               });
           }
         });

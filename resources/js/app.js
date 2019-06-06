@@ -14,6 +14,10 @@ import moment from "moment";
 import VueProgressBar from "vue-progressbar";
 import swal from "sweetalert2";
 
+// Gate
+import Gate from "./Gate";
+Vue.prototype.$gate = new Gate(window.user);
+
 // Sweetalert
 window.swal = swal;
 const toast = swal.mixin({
@@ -90,15 +94,19 @@ Vue.component(
     "passport-clients",
     require("./components/passport/Clients.vue").default
 );
-
 Vue.component(
     "passport-authorized-clients",
     require("./components/passport/AuthorizedClients.vue").default
 );
-
 Vue.component(
     "passport-personal-access-tokens",
     require("./components/passport/PersonalAccessTokens.vue").default
+);
+
+// 404 Component
+Vue.component(
+    "not-found",
+    require("./components/NotFound.vue").default
 );
 
 /**
